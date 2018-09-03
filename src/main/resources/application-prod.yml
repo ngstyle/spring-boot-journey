@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/ssm_crud?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+content: 正式内容
+employee:
+  empId: 1
+  empName: nohc
+  gender: M
+  email: chon_den@sina.com
+  did: 1
