@@ -98,7 +98,7 @@ public class EmployeeController {
                 }
 
                 int count = employeeService.delEmpByIds(list);
-                httpResult = HttpResult.fail(count);
+                httpResult = HttpResult.success(count);
             } else {
                 int empId = Integer.parseInt(empIds);
                 httpResult.setData(employeeService.delEmpById(empId));
