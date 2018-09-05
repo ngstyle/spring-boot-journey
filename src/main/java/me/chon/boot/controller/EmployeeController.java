@@ -29,25 +29,25 @@ public class EmployeeController {
      * 查询员工数据（分页） 引入pageHelper
      * @return
      */
-//    @RequestMapping("/emps")
-    public String getEmps(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, Model model) {
+//    @GetMapping("/emps")
+//    public String getEmps(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, Model model) {
+//
+//        // 在查询之前 使用pageHelper
+//        PageHelper.startPage(pageNum, 5);
+//
+//        // startPage 后面紧跟的这个查询就是分页查询
+//        List<Employee> emps = employeeService.getAll();
+//
+//        // 使用pageInfo 包装后的结果，封装了详细的分页信息
+//        PageInfo pageInfo = new PageInfo(emps, 5);
+//
+//        model.addAttribute("pageInfo", pageInfo);
+//
+//        return "list";
+//    }
 
-        // 在查询之前 使用pageHelper
-        PageHelper.startPage(pageNum, 5);
 
-        // startPage 后面紧跟的这个查询就是分页查询
-        List<Employee> emps = employeeService.getAll();
-
-        // 使用pageInfo 包装后的结果，封装了详细的分页信息
-        PageInfo pageInfo = new PageInfo(emps, 5);
-
-        model.addAttribute("pageInfo", pageInfo);
-
-        return "list";
-    }
-
-
-    @RequestMapping("/emps")
+    @GetMapping("/emps")
     public HttpResult<PageInfo> getEmpsWithJson(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum) {
 
         // 在查询之前 使用pageHelper
