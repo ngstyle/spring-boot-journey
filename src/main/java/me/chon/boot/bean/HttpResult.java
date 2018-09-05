@@ -9,16 +9,26 @@ public class HttpResult<T> {
     private T data;
 
     public static HttpResult success() {
+        return success(null);
+    }
+
+    public static HttpResult success(Object object) {
         HttpResult httpResult = new HttpResult();
         httpResult.setCode(100);
         httpResult.setMessage("请求成功");
+        httpResult.setData(object);
         return httpResult;
     }
 
     public static HttpResult fail() {
+        return fail(null);
+    }
+
+    public static HttpResult fail(Object object) {
         HttpResult httpResult = new HttpResult();
         httpResult.setCode(200);
         httpResult.setMessage("请求失败");
+        httpResult.setData(object);
         return httpResult;
     }
 

@@ -19,6 +19,7 @@ import java.util.List;
  * 处理员工CRUD
  */
 @RestController
+@SuppressWarnings("unchecked")
 public class EmployeeController {
 
     @Autowired
@@ -58,19 +59,15 @@ public class EmployeeController {
         // 使用pageInfo 包装后的结果，封装了详细的分页信息
         PageInfo pageInfo = new PageInfo(emps, 5);
 
-        HttpResult httpResult = HttpResult.success();
-        httpResult.setData(pageInfo);
-
-        return httpResult;
+        return HttpResult.success(pageInfo);
     }
 
     @PostMapping(value = "/emp")
     public HttpResult<List<FieldError>> addEmp(@Valid Employee employee, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            HttpResult failResult = HttpResult.fail();
-            failResult.setData(bindingResult.getFieldErrors());
-            return failResult;
+            return null;
+//            return HttpResult.fail(bindingResult.getFieldErrors());
         }
 
         employeeService.addEmp(employee);
@@ -80,18 +77,12 @@ public class EmployeeController {
     @GetMapping(value = "/emp/{id}")
     public HttpResult<Employee> getEmp(@PathVariable("id") Integer id) {
         Employee employee = employeeService.getEmp(id);
-
-        HttpResult httpResult = HttpResult.success();
-        httpResult.setData(employee);
-        return httpResult;
+        return HttpResult.success(employee);
     }
 
     @PutMapping(value = "/emp/{empId}")
     public HttpResult<Integer> updateEmp(Employee employee) {
-        HttpResult httpResult = HttpResult.success();
-        httpResult.setData(employeeService.updateEmp(employee));
-
-        return httpResult;
+        return HttpResult.success(employeeService.updateEmp(employee));
     }
 
     @DeleteMapping("/emp/{empIds}")
@@ -107,18 +98,14 @@ public class EmployeeController {
                 }
 
                 int count = employeeService.delEmpByIds(list);
-                if (count != list.size()) {
-                    httpResult = HttpResult.fail();
-                }
-                httpResult.setData(count);
+                httpResult = HttpResult.fail(count);
             } else {
                 int empId = Integer.parseInt(empIds);
                 httpResult.setData(employeeService.delEmpById(empId));
             }
         } catch (NumberFormatException e) {
-            httpResult = HttpResult.fail();
+            httpResult = HttpResult.fail(0);
             httpResult.setMessage("参数有误");
-            httpResult.setData(0);
         }
 
         return httpResult;
@@ -131,20 +118,18 @@ public class EmployeeController {
         String regex = "(^[a-zA-Z0-9_-]{6,16}$)|(^[\\u2E80-\\u9FFF]{2,5})";
         HttpResult httpResult;
         if (!empName.matches(regex)) {
-            httpResult = HttpResult.fail();
+            httpResult = HttpResult.fail(false);
             httpResult.setMessage("用户名可以是2-5位中文或者6-16位英文和数字的组合<后端>");
-            httpResult.setData(false);
             return httpResult;
         }
 
         if (isUserNameExist) {
-            httpResult = HttpResult.fail();
+            httpResult = HttpResult.fail(false);
             httpResult.setMessage("用户名已存在");
         } else {
-            httpResult = HttpResult.success();
+            httpResult = HttpResult.success(true);
             httpResult.setMessage("");
         }
-        httpResult.setData(!isUserNameExist);
 
         return httpResult;
     }

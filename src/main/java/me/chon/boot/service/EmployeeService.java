@@ -4,6 +4,8 @@ package me.chon.boot.service;
 import me.chon.boot.bean.Employee;
 import me.chon.boot.bean.EmployeeExample;
 import me.chon.boot.dao.EmployeeMapper;
+import me.chon.boot.exception.BootException;
+import me.chon.boot.exception.ExceptionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +40,14 @@ public class EmployeeService {
         return count > 0;
     }
 
-    public Employee getEmp(Integer id) {
-        return employeeMapper.selectByPrimaryKey(id);
+    public Employee getEmp(Integer id)  {
+        Employee employee = employeeMapper.selectByPrimaryKeyWithDept(id);
+
+        if (employee.getdId() == null) {
+            throw new BootException(ExceptionEnum.DEPT_EMPTY);
+        }
+
+        return employee;
     }
 
     @Transactional
