@@ -4,9 +4,11 @@ package me.chon.boot.dao;
 import me.chon.boot.bean.Department;
 import me.chon.boot.bean.DepartmentExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface DepartmentMapper {
     long countByExample(DepartmentExample example);
 

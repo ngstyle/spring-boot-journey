@@ -3,6 +3,7 @@ package me.chon.boot;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 启动方式
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *    可以加参数 --spring.profiles.active=dev    加载配置文件不一样
  */
 @SpringBootApplication
+@EnableTransactionManagement
 @MapperScan("me.chon.boot.dao")
 public class BootApplication {
 

@@ -4,9 +4,11 @@ package me.chon.boot.dao;
 import me.chon.boot.bean.Employee;
 import me.chon.boot.bean.EmployeeExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EmployeeMapper {
     long countByExample(EmployeeExample example);
 
