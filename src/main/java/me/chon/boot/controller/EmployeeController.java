@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,9 +24,30 @@ public class EmployeeController {
     @Autowired
     EmployeeService employeeService;
 
+    /**
+     * 查询员工数据（分页） 引入pageHelper
+     * @return
+     */
+//    @RequestMapping("/emps")
+    public String getEmps(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, Model model) {
 
-    @GetMapping("/emps")
-    public HttpResult<PageInfo> getEmps(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum) {
+        // 在查询之前 使用pageHelper
+        PageHelper.startPage(pageNum, 5);
+
+        // startPage 后面紧跟的这个查询就是分页查询
+        List<Employee> emps = employeeService.getAll();
+
+        // 使用pageInfo 包装后的结果，封装了详细的分页信息
+        PageInfo pageInfo = new PageInfo(emps, 5);
+
+        model.addAttribute("pageInfo", pageInfo);
+
+        return "list";
+    }
+
+
+    @RequestMapping("/emps")
+    public HttpResult<PageInfo> getEmpsWithJson(@RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum) {
 
         // 在查询之前 使用pageHelper
         PageHelper.startPage(pageNum, 5);
@@ -51,7 +73,55 @@ public class EmployeeController {
             return failResult;
         }
 
+        employeeService.addEmp(employee);
         return HttpResult.success();
+    }
+
+    @GetMapping(value = "/emp/{id}")
+    public HttpResult<Employee> getEmp(@PathVariable("id") Integer id) {
+        Employee employee = employeeService.getEmp(id);
+
+        HttpResult httpResult = HttpResult.success();
+        httpResult.setData(employee);
+        return httpResult;
+    }
+
+    @PutMapping(value = "/emp/{empId}")
+    public HttpResult<Integer> updateEmp(Employee employee) {
+        HttpResult httpResult = HttpResult.success();
+        httpResult.setData(employeeService.updateEmp(employee));
+
+        return httpResult;
+    }
+
+    @DeleteMapping("/emp/{empIds}")
+    public HttpResult<Integer> delEmp (@PathVariable("empIds") String empIds) {
+
+        HttpResult httpResult = HttpResult.success();
+        try {
+            if (empIds.contains("-")) {
+                ArrayList<Integer> list = new ArrayList();
+                String[] empIdsArr = empIds.split("-");
+                for (String empIdStr : empIdsArr) {
+                    list.add(Integer.parseInt(empIdStr));
+                }
+
+                int count = employeeService.delEmpByIds(list);
+                if (count != list.size()) {
+                    httpResult = HttpResult.fail();
+                }
+                httpResult.setData(count);
+            } else {
+                int empId = Integer.parseInt(empIds);
+                httpResult.setData(employeeService.delEmpById(empId));
+            }
+        } catch (NumberFormatException e) {
+            httpResult = HttpResult.fail();
+            httpResult.setMessage("参数有误");
+            httpResult.setData(0);
+        }
+
+        return httpResult;
     }
 
     @PostMapping(value = "/checkuser")
