@@ -1,4 +1,4 @@
-package me.chon.boot.controller;
+package me.chon.boot.security.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.DefaultRedirectStrategy;
